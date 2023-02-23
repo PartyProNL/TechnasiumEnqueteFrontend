@@ -18,28 +18,34 @@ class Answer {
         natuurbeleving?: string[];
         lichaamsbeweging?: string[];
         huisdier?: string[];
+        combinatie?: string[];
     }
     activiteitBezoeken?: {
         natuurspeeltuin?: string;
         natuurbeleving?: string;
         lichaamsbeweging?: string;
         huisdier?: string;
+        combinatie?: string;
     }
-    activiteitCijfer?: {
-        natuurspeeltuin?: string;
-        natuurbeleving?: string;
-        lichaamsbeweging?: string;
-        huisdier?: string;
-    }
-    activiteitFeedback?: {
-        natuurspeeltuin?: string;
-        natuurbeleving?: string;
-        lichaamsbeweging?: string;
-        huisdier?: string;
-    }
+    // activiteitCijfer?: {
+    //     natuurspeeltuin?: string;
+    //     natuurbeleving?: string;
+    //     lichaamsbeweging?: string;
+    //     huisdier?: string;
+    // }
+    // activiteitFeedback?: {
+    //     natuurspeeltuin?: string;
+    //     natuurbeleving?: string;
+    //     lichaamsbeweging?: string;
+    //     huisdier?: string;
+    // }
     feedback?: string = "";
     leeftijd?: string = "";
+    cijfer?: string = "";
+    aanbevelen?: string = "";
 }
+
+let tempEmail = Math.floor(Math.random() * 99999999) + "";
 
 const answers = reactive<Answer>({
     email: "",
@@ -47,11 +53,15 @@ const answers = reactive<Answer>({
     activiteiten: [],
     mensen: {},
     activiteitBezoeken: {},
-    activiteitCijfer: {},
-    activiteitFeedback: {},
+    // activiteitCijfer: {},
+    // activiteitFeedback: {},
     feedback: "",
     leeftijd: "",
+    cijfer: "",
+    aanbevelen: "",
 })
+
+answers.email = tempEmail;
 
 const send = async () => {
     const email = answers.email
@@ -94,13 +104,13 @@ const send = async () => {
                 <p class="text-slate-700">In dit eerste deel gaan wij in op hoe vaak u MAK Blokweer bezoekt en wat voor activiteit u onderneemt. De hoofdvragen hier zijn verplicht.</p>
             </div>
             
-            <TextInput 
+            <!-- <TextInput 
             v-model="answers.email" 
             placeholder="voornaamAchternaam1@outlook.com" 
             label="Wat is uw email-adres?" 
             id="email" 
             :required=true>
-            </TextInput>
+            </TextInput> -->
 
             <TextInput 
             v-model="answers.bezoek" 
@@ -117,6 +127,7 @@ const send = async () => {
                 {value:'natuurbeleving',label:'Voor de natuurbeleving (voor de rust/de dieren/het bos/de wandelpaden etc.)'}, 
                 {value:'lichaamsbeweging',label:'Voor lichaamsbeweging'},
                 {value:'huisdier',label:'Om een hond (of ander huisdier) uit te laten'},
+                {value:'combinatie',label:'Mijn huisdier uitlaten gecombineerd met lichaamsbeweging'},
             ]"
             otherplaceholder="Uw andere activiteit"></CheckBoxGroup>
             
@@ -137,7 +148,7 @@ const send = async () => {
                 :required=true>
                 </TextInput>
 
-                <TextInput 
+                <!-- <TextInput 
                 v-model="answers.activiteitCijfer!.natuurspeeltuin" 
                 placeholder="1-10" 
                 label="Welk cijfer van 1-10 geeft u uw bezoek aan de natuurspeeltuin?" 
@@ -152,7 +163,7 @@ const send = async () => {
                 label="Heeft u nog extra feedback over de natuurspeeltuin?" 
                 id="feedbackNatuurspeeltuin" 
                 :required=false>
-                </TextInput>
+                </TextInput> -->
             </div>
 
             <div v-if="answers.activiteiten!.includes('natuurbeleving')">
@@ -172,7 +183,7 @@ const send = async () => {
                 :required=true>
                 </TextInput>
 
-                <TextInput 
+                <!-- <TextInput 
                 v-model="answers.activiteitCijfer!.natuurbeleving" 
                 placeholder="1-10" 
                 label="Welk cijfer van 1-10 geeft u uw bezoek aan MAK Blokweer voor de natuurbeleving?" 
@@ -187,7 +198,7 @@ const send = async () => {
                 label="Heeft u nog extra feedback over de natuurbeleving?" 
                 id="feedbackNatuurbeleving" 
                 :required=false>
-                </TextInput>
+                </TextInput> -->
             </div>
 
             <div v-if="answers.activiteiten!.includes('lichaamsbeweging')">
@@ -207,7 +218,7 @@ const send = async () => {
                 :required=true>
                 </TextInput>
 
-                <TextInput 
+                <!-- <TextInput 
                 v-model="answers.activiteitCijfer!.lichaamsbeweging" 
                 placeholder="1-10" 
                 label="Welk cijfer van 1-10 geeft u uw bezoek aan MAK Blokweer voor lichaamsbeweging?" 
@@ -222,7 +233,7 @@ const send = async () => {
                 label="Heeft u nog extra feedback over lichaamsbeweging in MAK Blokweer?" 
                 id="feedbackLichaamsbeweging" 
                 :required=false>
-                </TextInput>
+                </TextInput> -->
             </div>
 
             <div v-if="answers.activiteiten!.includes('huisdier')">
@@ -242,7 +253,7 @@ const send = async () => {
                 :required=true>
                 </TextInput>
 
-                <TextInput 
+                <!-- <TextInput 
                 v-model="answers.activiteitCijfer!.huisdier" 
                 placeholder="1-10" 
                 label="Welk cijfer van 1-10 geeft u uw bezoek aan MAK Blokweer om uw huisdier(en) uit te laten?" 
@@ -257,12 +268,30 @@ const send = async () => {
                 label="Heeft u nog extra feedback over het het uit laten van uw huisdier(en) in MAK Blokweer?" 
                 id="feedbackHuisdier" 
                 :required=false>
+                </TextInput> -->
+            </div>
+
+            <div v-if="answers.activiteiten!.includes('combinatie')">
+                <CheckBoxGroup label="Met welke mensen gaat u naar MAK Blokweer om uw huisdier(en) uit te laten en tegelijk te bewegen?" v-model="answers.mensen!.huisdier" :values="[
+                {value:'zonder',label:'Zonder anderen'},
+                {value:'gezinshuishouden',label:'Met gezinshuishouden (partner/kind(eren))'},
+                {value:'familie',label:'Met familie, buiten mijn eigen huishouden'},
+                {value:'vrienden',label:'Met vriend(en)'},
+                {value:'collegas',label:'Met collega(’s)/ klasgenoot/klasgenoten'},
+            ]" otherplaceholder="Andere mensen"></CheckBoxGroup>
+
+                <TextInput 
+                v-model="answers.activiteitBezoeken!.huisdier" 
+                placeholder="Bijv. 3 keer per jaar of 2 keer per dag" 
+                label="Hoe vaak bezoekt u MAK Blokweer om uw huisdier(en) uit te laten en tegelijk te bewegen per dag, week, maand, of jaar?" 
+                id="bezoekerHuisdier" 
+                :required=true>
                 </TextInput>
             </div>
             
             <div class="mb-4">
                 <h1 class="text-xl font-semibold mb-2">Deel 2</h1>
-                <p class="text-slate-700">Wij gaan u nu nog twee extra vragen stellen. Deze zijn niet verplicht, maar wij zouden het zeer op prijs stellen als u deze zou beantwoorden, omdat deze kunnen helpen bij het verklaren van onze resultaten.</p>
+                <p class="text-slate-700">Wij gaan u nu nog een paar extra vragen stellen. Deze zijn niet verplicht, maar wij zouden het zeer op prijs stellen als u deze zou beantwoorden, omdat deze kunnen helpen bij het verklaren van onze resultaten. Deze antwoorden kunnen bovendien nog andere extra waarde voor MAK Blokweer hebben.</p>
             </div>
 
             <RadioButtonGroup label="In welke leeftijdscategorie bevindt u zich?"
@@ -280,9 +309,26 @@ const send = async () => {
             ></RadioButtonGroup>
 
             <TextInput 
+            v-model="answers.cijfer" 
+            placeholder="1-10" 
+            label="Welk cijfer van 1-10 geeft u uw bezoek aan MAK Blokweer?" 
+            id="cijfer" 
+            type="number"
+            :required=false>
+            </TextInput>
+
+            <TextInput 
             v-model="answers.feedback" 
-            placeholder="Ja/nee, want" 
-            label="Zou u het natuurpark van MAK Blokweer aanbevelen aan familie/vrienden/kennissen? Welke feedback zou u nog willen achterlaten, voor MAK Blokweer om het natuurpark te verbeteren?" 
+            placeholder="Dit vond ik van MAK Blokweer" 
+            label="Heeft u nog feedback voor MAK Blokweer?" 
+            id="feedbackHuisdier" 
+            :required=false>
+            </TextInput>
+
+            <TextInput 
+            v-model="answers.aanbevelen" 
+            placeholder="Ja/nee, want ..." 
+            label="Zou u het natuurpark van MAK Blokweer aanbevelen aan familie/vrienden/kennissen? Waarom?" 
             id="feedback" 
             :required=false>
             </TextInput>
